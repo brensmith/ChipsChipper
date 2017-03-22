@@ -15,6 +15,9 @@ var logger = require('morgan');
 mongoose.connect('mongodb://admin:root@ds041526.mlab.com:41526/chipper');
 var db = mongoose.connection;
 
+// require files from route folder, no need for .js at the end of the file name
+var routes = require('./routes/index');
+
 // Initialize App
 var app = express();
 // Use logger middleware
