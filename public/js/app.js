@@ -7,7 +7,11 @@ MyApp.config(function($routeProvider){
             templateUrl: 'home.html',
             controller: 'mainController'
         })
-        
+        //the cart display
+        .when('/cart', {
+            templateUrl: 'cart.html',
+            controller: 'mainController'
+        })
         
         .otherwise({
             redirectTo: '/'
@@ -48,7 +52,28 @@ MyApp.controller('mainController', ['$scope', '$http', '$location', '$routeParam
         });
     };
 
-   
+    //Add fooditem to basket
+$scope.addToBasket = function(index,id,fooditem){
+        console.log(fooditem);
+        $http.post('/basket/', fooditem).success(function(response){
+            console.log('addToBasket');
+                        $scope.newBasket = {"json" : ""};
+                        
+        });
+    };
+
+      //Delete fooditem to basket
+$scope.deleteBasketItem = function(index,id,basketitem){
+    correctIndex = $scope.basketitems.indexOf(basketitem);
+
+        console.log(basketitem);
+        $http.delete('/basket/', basketitem).success(function(response){
+            $scope.basketitems.splice(correctIndex, 1);
+            console.log('Basket Item Deleted');
+                        
+                        
+        });
+    };
 
 
     $scope.updateFoodItem = function(){
@@ -83,11 +108,25 @@ MyApp.controller('mainController', ['$scope', '$http', '$location', '$routeParam
 
 
 
-    
+    $scope.total = function(){
+        var t = 0;
+    for(var k in $scope.fooditems){
+            t += parseInt($scope.fooditems[k].price);
+        }
+        return t;
+    }
+
+    $scope.totalbasket = function(){
+        var t = 0;
+    for(var k in $scope.basketitems){
+            t += parseInt($scope.basketitems[k].price);
+        }
+        return t;
+    }
 
     $scope.getFoodItem();
     $scope.getSpecialItem();
-    
+    $scope.getBasketItem();
 
 
 }]);
