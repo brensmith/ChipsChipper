@@ -1,0 +1,40 @@
+<h2>Items in Basket</h2>
+
+<div class="container-fluid">
+	<div class="row">
+  		<div class="col-3">
+  			<table class="table table-striped">
+	            	<thead>
+	                	<tr><!-- Table headings -->
+	                		<th>Delete</th>
+		                    <th>Index</th>
+		                    <th>Category</th>
+		                    <th>Name</th>
+		                    <th>Price</th>
+	                	</tr>
+	            	</thead>
+            	<tbody>
+
+
+	                <tr ng-repeat="basketitem in basketitems track by basketitem._id | filter:search">
+	                	<td><button type="button" class="btn btn-danger pull-left" data-toggle="modal" data-target="#myModalEdit" ng-click="deleteBasketItem($index,basketitem._id,basketitem)">X</button></td>
+	                    <td>{{$index+1}}.</td>
+	                    <td>{{basketitem.category}}</td>
+	                    <td>{{basketitem.name}}</td>
+	                    <td>€ {{basketitem.price | number : 2}}</td>
+                	</tr>
+            	</tbody>
+        	</table>
+    	</div>
+	</div>
+	<hr>
+	<button type="button" class="btn btn-info pull-left" data-toggle="modal" data-target="#myModalEdit" ng-click="removeFoodItem()">Checkout</button>
+	<button type="button" class="btn btn-default pull-right">Total Amount € {{totalbasket()}}</button></br></br>
+	<button type="button" class="btn btn-danger pull-right">Save Amount € {{totalbasket()}}</button>
+
+	
+
+	
+	
+
+	

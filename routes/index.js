@@ -1,12 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-//Required Model --> This gives us access to the menu model
+//Required Models --> This gives us access to these
 var FoodMenu = require('../models/menu');
+var SpecialMenu = require('../models/special');
+var Basket = require('../models/basket');
 
-// when user requests "/" respond by rendering index.handlebars
+
+// Get Homepage
 router.get('/', function(req, res){
-	res.render('index');
+    res.render('index');
 });
 
 // Get food item objects from database
@@ -16,7 +19,7 @@ router.get('/foodmenu', function(req, res){
         .exec(function(err, foodmenu){
             if(err){
                 res.send('An error has occured');
-            }	else{
+            }   else{
                 console.log(foodmenu);
                 //req.json(menu); //returns the data in json format
                 res.send(foodmenu);
@@ -32,7 +35,7 @@ router.get('/foodmenu/:id', function(req, res){
         .exec(function(err, foodmenu){
             if(err){
                 res.send('An error has occured');
-            }	else{
+            }   else{
                 console.log(foodmenu)
                 res.json(foodmenu);
             }
@@ -135,5 +138,138 @@ router.post('/update', function(req, res) {
     });
 
 });
+
+
+
+// Get food item objects from database
+router.get('/specialmenu', function(req, res){
+    console.log('GET all special food');
+    SpecialMenu.find({})
+        .exec(function(err, specialmenu){
+            if(err){
+                res.send('An error has occured');
+            }   else{
+                console.log(specialmenu);
+                //req.json(menu); //returns the data in json format
+                res.send(specialmenu);
+            }
+        });
+
+});
+
+// Get food item objects from database
+router.get('/basket', function(req, res){
+    console.log('GET all basket food');
+    Basket.find({})
+        .exec(function(err, basket){
+            if(err){
+                res.send('An error has occured');
+            }   else{
+                console.log(basket);
+                //req.json(menu); //returns the data in json format
+                res.send(basket);
+            }
+        });
+
+});
+
+
+
+// Add menu object to database
+router.post('/basket', function(req, res){
+    var newBasket = new Basket();
+
+    newBasket.category = req.body.category;
+    newBasket.name = req.body.name;
+    newBasket.quantity = req.body.quantity;
+    newBasket.price = req.body.price;
+    newBasket.img_url = req.body.img_url;
+
+    newBasket.save(function(err,Basket){
+        if(err){
+            res.send('Error saving Food Item');
+        }else{
+            console.log(Basket);
+            res.send(Basket);
+        }
+    });
+});
+
+
+
+// Find one food object from database
+router.get('/specialmenu/:id', function(req, res){
+    console.log('GET one special item');
+    SpecialMenu.findOne({_id: req.params.id})
+        .exec(function(err, specialmenu){
+            if(err){
+                res.send('An error has occured');
+            }   else{
+                console.log(specialmenu)
+                res.json(specialmenu);
+            }
+        });
+
+});
+
+// Add menu object to database
+router.post('/specialmenu', function(req, res){
+    var newSpecialMenu = new SpecialMenu();
+
+    newSpecialMenu.name = req.body.name;
+    newSpecialMenu.price = req.body.price;
+    newSpecialMenu.item = req.body.item;
+    newSpecialMenu.adhoc_price = req.body.adhoc_price;
+    
+
+    newSpecialMenu.save(function(err,SpecialMenu){
+        if(err){
+            res.send('Error saving Special Item');
+        }else{
+            console.log(SpecialMenu);
+            res.send(SpecialMenu);
+        }
+    });
+});
+
+
+
+// Update food Item object to database
+router.put('/specialmenu/:id', function(req, res){
+    SpecialMenu.findOneAndUpdate({_id: req.params.id},
+        {$set:{name: req.body.name,
+            price: req.body.price,
+            item: req.body.item,
+            adhoc_price: req.body.adhoc_price,
+            
+        }},
+        {upsert: true},
+        function(err, newSpecialMenu){
+            if(err){
+                res.send('error occured');
+            }
+            else{
+                console.log(newSpecialMenu);
+                res.send(newSpecialMenu);
+            }
+
+        });
+});
+
+router.delete('/specialmenu/:id', function(req, res){
+    SpecialMenu.findOneAndRemove({
+        _id:req.params.id
+    },function(err,SpecialMenu){
+        if(err){
+            res.send('Error deleting');
+        }else{
+            console.log(SpecialMenu);
+            res.status(204);
+        }
+    });
+});
+
+
+
 
 module.exports = router;
