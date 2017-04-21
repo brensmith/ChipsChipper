@@ -80,14 +80,14 @@ $scope.deleteBasketItem = function(index,id,basketitem){
         var id = $routeParams.id;
         $http.put('/foodmenu/'+id, $scope.fooditem).success(function(response){
             console.log('updateFoodItem');
-            //window.location.href='#/books';
+            
         });
     };
 
     $scope.removeFoodItem = function(id){
         $http.delete('/foodmenu/'+id).success(function(response){
             console.log('removeaddFoodItem');
-            //window.location.href='#/books';
+            
         });
     };
 
